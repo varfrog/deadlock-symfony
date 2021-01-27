@@ -45,5 +45,5 @@ Explanation of the log:
 * Line 4: `app:lock-alice-and-bob` tries to get a lock on Bob but it has to wait for `app:lock-bob-and-alice`
 to end its database transaction, i.e. for the lock on Bob to be released. But now `app:lock-bob-and-alice` will never
  release the lock  because it itself is waiting for the same thing - it waits for a lock of Alice to be released by
- `app:lock-alice-and-bob`. This situation cannot be resolved (both commands are infinitely waiting for each other) and
+ `app:lock-alice-and-bob` (it's blocking in line 3). This situation cannot be resolved (both commands are infinitely waiting for each other) and
   thus we get a deadlock (Line 5).
