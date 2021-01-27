@@ -1,4 +1,4 @@
-## deadlock-symfony
+# deadlock-symfony
 
 A PHP app on Symfony and Doctrine that shows how a database deadlock happens.
 
@@ -8,7 +8,7 @@ A PHP app on Symfony and Doctrine that shows how a database deadlock happens.
 sh bin/build.sh
 ```
 
-# Running the app
+## Running the app
 
 ```
 docker exec -it varfrog-deadlock-app sh bin/run.sh
@@ -37,7 +37,7 @@ Command log in a chronological order, lines numbered in sequence:
      5  19:56:44.640286;app:lock-alice-and-bob;Got a deadlock.
 ```
 
-Explanation:
+Explanation of the log:
 * Lines 1, 2: the order of these lines does not matter - either of the commands can be started first. Here,
 `app:lock-alice-and-bob` locks Alice and sleeps for some seconds, `app:lock-bob-and-alice` locks Bob.
 * Line 3: `app:lock-bob-and-alice` tries to get a lock on Alice but has to wait since it's locked in line 1 by
