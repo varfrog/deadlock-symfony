@@ -6,58 +6,48 @@ namespace App\Command;
 
 use App\Repository\UserRepository;
 use App\Service\OutputHelper;
-use Doctrine\DBAL\Exception\DeadlockException;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class LockAliceAndBobCommand extends Command
+class LockBobAndAliceCommand extends Command
 {
-    protected static $defaultName = 'app:lock-alice-and-bob';
+    protected static $defaultName = 'app:lock-bob-and-alice';
 
     private EntityManagerInterface $entityManager;
     private UserRepository $userRepository;
     private OutputHelper $outputHelper;
-    private LoggerInterface $logger;
 
     public function __construct(
         EntityManagerInterface $entityManager,
         UserRepository $userRepository,
-        OutputHelper $outputHelper,
-        LoggerInterface $logger
+        OutputHelper $outputHelper
     ) {
         parent::__construct();
 
         $this->entityManager = $entityManager;
         $this->userRepository = $userRepository;
         $this->outputHelper = $outputHelper;
-        $this->logger = $logger;
     }
 
     protected function configure()
     {
-        $this->setDescription('Locks users in the following order: Alice, Bob.');
+        $this->setDescription('Locks users in the following order: Bob, Alice.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->entityManager->transactional(function () use ($output) {
-            $this->log($output, 'Locking Alice and sleeping.');
-            $this->userRepository->findOneByUsername('alice');
-            sleep(5);
             $this->log($output, 'Locking Bob.');
-            try {
-                $this->userRepository->findOneByUsername('bob');
-            } catch (DeadlockException $exception) {
-                $this->logger->error('Got a deadlock in ' . self::$defaultName, ['exception' => $exception]);
-                $this->log($output, 'Got a deadlock.');
-            }
+            $this->userRepository->findOneByUsername('bob');
+            $this->log($output, 'Locking Alice.');
+            $this->userRepository->findOneByUsername('alice');
         });
 
         return Command::SUCCESS;
     }
+
 
     private function log(OutputInterface $output, string $message)
     {

@@ -4,14 +4,12 @@ A PHP app on Symfony and Doctrine that shows when a database deadlock happens.
 
 ## Usage
 
+Build a container
 ```
-docker-compose build
-docker-compose up -d
-docker exec -it varfrog-deadlock-app sh
+sh bin/build.sh
 ```
 
-In the shell of the container:
+Run the app
 ```
-composer install
-bin/console doctrine:migrations:migrate --no-interaction
+docker exec -it varfrog-deadlock-app sh bin/run.sh
 ```
