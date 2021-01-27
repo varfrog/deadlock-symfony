@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\DataFixtures\AppFixtures;
 use App\Repository\UserRepository;
 use App\Service\OutputHelper;
 use Doctrine\DBAL\Exception\DeadlockException;
@@ -45,11 +46,11 @@ class LockAliceAndBobCommand extends Command
     {
         $this->entityManager->transactional(function () use ($output) {
             $this->log($output, 'Locking Alice and sleeping.');
-            $this->userRepository->findOneByUsername('alice');
+            $this->userRepository->findOneByUsername(AppFixtures::USERNAME_ALICE);
             sleep(5);
             $this->log($output, 'Locking Bob.');
             try {
-                $this->userRepository->findOneByUsername('bob');
+                $this->userRepository->findOneByUsername(AppFixtures::USERNAME_BOB);
             } catch (DeadlockException $exception) {
                 $this->logger->error('Got a deadlock in ' . self::$defaultName, ['exception' => $exception]);
                 $this->log($output, 'Got a deadlock.');

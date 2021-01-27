@@ -8,4 +8,5 @@ cat out_a.csv out_b.csv > out.csv
 sort --field-separator=";" --key=1 out.csv > out_sorted.csv
 rm out_a.csv out_b.csv out.csv
 mv out_sorted.csv var/out_sorted.csv
-cat var/out_sorted.csv
+echo "Command log in a chronological order, lines numbered in sequence:"
+nl var/out_sorted.csv

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\DataFixtures\AppFixtures;
 use App\Repository\UserRepository;
 use App\Service\OutputHelper;
 use Doctrine\ORM\EntityManagerInterface;
@@ -40,9 +41,9 @@ class LockBobAndAliceCommand extends Command
     {
         $this->entityManager->transactional(function () use ($output) {
             $this->log($output, 'Locking Bob.');
-            $this->userRepository->findOneByUsername('bob');
+            $this->userRepository->findOneByUsername(AppFixtures::USERNAME_BOB);
             $this->log($output, 'Locking Alice.');
-            $this->userRepository->findOneByUsername('alice');
+            $this->userRepository->findOneByUsername(AppFixtures::USERNAME_ALICE);
         });
 
         return Command::SUCCESS;
